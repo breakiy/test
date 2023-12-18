@@ -26,7 +26,7 @@ jobs:
           xgo_version: latest
           go_version: 1.21
           dest: dist
-          pkg: go
+          pkg: go/main.go
           prefix: socks5
           targets: linux/amd64
           v: true
