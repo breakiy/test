@@ -3,46 +3,50 @@ name: Cross compile
 on:
   push:
     branches:
-      - main
+      - '*'
     tags:
       - 'socks*'
   workflow_dispatch:
 
+
 jobs:
   releases-matrix:
-    name: Cross compile
-
-    runs-on: ubuntu-20.04
-    
+    name: Release Go Binary
+    runs-on: ubuntu-latest
     env:
-      BINARY: socks5
       CGO_ENABLED: 0
+      BINARY: socks5
 
+    strategy:
+      matrix:
+        goos: [linux]
+        goarch: [amd64]
+    
     steps:
-      - name: Checkout code
+      - name: Git clone repository
         uses: actions/checkout@v4.1.1
         with:
-          fetch-depth: 0
-      
-      - name: xgo build
-        uses: crazy-max/ghaction-xgo@v3.0.0
-        with:
-          xgo_version: latest
-          go_version: 1.21
-          dest: dist
-          project_path: go
-          prefix: socks5
-          targets: linux/amd64
-          v: true
-          x: false
-          race: false
-          ldflags: -s -w --extldflags '-static -fpic'
-          buildmode: default
+          fetch-depth: 1
 
-      - name: Release binary files
-        uses: softprops/action-gh-release@v0.1.15
+      - uses: wangyoucao577/go-release-action@v1.41
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          goos: ${{ matrix.goos }}
+          goarch: ${{ matrix.goarch }}
+          goversion: "1.21.5"
+          project_path: "go"
+          ldflags: -s -w --extldflags '-static -fpic'
+          md5sum: "FALSE"
+          release_tag: "${{ env.BINARY }}"
+          release_name: "${{ env.BINARY }}"
+          binary_name: "${{ env.BINARY }}"
+          compress_assets: "AUTO"
+          asset_name: "${{ env.BINARY }}-${{ matrix.goos }}-${{ matrix.goarch }}"
+
+      - name: Delete old workflow runs
+        uses: MajorScruffy/delete-old-workflow-runs@v0.3.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: socks5
-          files: dist/*.tar.gz
+          repository: ${{ github.repository }}
+          older-than-seconds: 3600
