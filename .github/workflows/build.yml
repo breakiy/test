@@ -30,7 +30,7 @@ jobs:
           xgo_version: latest
           go_version: 1.21
           dest: dist
-          project_path: go/main.go
+          project_path: go
           prefix: socks5
           targets: linux/amd64
           v: true
