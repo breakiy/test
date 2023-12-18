@@ -16,8 +16,10 @@ jobs:
     runs-on: ubuntu-20.04
 
     steps:
-      - name: Git clone
+      - name: Checkout code
         uses: actions/checkout@v4.1.1
+        with:
+          fetch-depth: 0
       
       - name: xgo build
         uses: crazy-max/ghaction-xgo@v3.0.0
