@@ -18,9 +18,7 @@ jobs:
     steps:
       - name: Git clone
         uses: actions/checkout@v4.1.1
-        with:
-          fetch-depth: 1
-
+      
       - name: xgo build
         uses: crazy-max/ghaction-xgo@v3.0.0
         with:
