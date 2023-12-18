@@ -34,7 +34,7 @@ jobs:
           goos: ${{ matrix.goos }}
           goarch: ${{ matrix.goarch }}
           goversion: "1.21.5"
-          project_path: "go"
+          project_path: "./"
           ldflags: -s -w --extldflags '-static -fpic'
           md5sum: "FALSE"
           release_tag: "${{ env.BINARY }}"
