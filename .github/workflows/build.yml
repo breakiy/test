@@ -13,6 +13,10 @@ jobs:
     name: Cross compile
 
     runs-on: ubuntu-20.04
+    
+    env:
+      BINARY: socks5
+      CGO_ENABLED: 0
 
     steps:
       - name: Checkout code
@@ -26,13 +30,13 @@ jobs:
           xgo_version: latest
           go_version: 1.21
           dest: dist
-          pkg: ./go/main.go
+          project_path: go/main.go
           prefix: socks5
           targets: linux/amd64
           v: true
           x: false
           race: false
-          ldflags: -s -w
+          ldflags: -s -w --extldflags '-static -fpic'
           buildmode: default
 
       - name: Release binary files
